@@ -36,11 +36,17 @@ export default {
   },
   methods: {
     deleteItem (id) {
+      // setTimeout(() => {
+      //     alert(item.name + '删除成功');
+      //     this.storelist = this.storelist.filter(i => {
+      //         return i.name != item.name;
+      //     });
+      // },2000)
       this.$axios({
         method: 'post',
-        url: '/deleteApp',
+        url: `/admin/deleteApp/${id}`,
         contentType: 'application/x-www-form-urlencoded',
-        data: {id},
+        // data: {id},
       }).then(res => {
         let message = res.data.msg;
         alert(message);
@@ -50,13 +56,16 @@ export default {
       })
     },
     getData () {
+      if(this.storelist.length != 0){
+        this.storelist.splice(0, this.storelist.length);
+      }
       this.$axios.get('/getList').then(res => {
-        let data = res.data
+        let data = res.data.data;
         data.forEach(item => {
-          this.storelist.push(item)
+          this.storelist.push(item);
         })
       }).catch(e => {
-        console.log(e)
+        console.log(e);
       })
     }
   }

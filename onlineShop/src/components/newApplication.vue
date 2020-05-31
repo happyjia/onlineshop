@@ -4,6 +4,9 @@
       <el-form-item label="应用名称">
         <el-input v-model="storelist.name" placeholder="应用名称"></el-input>
       </el-form-item>
+      <el-form-item label="版本">
+        <el-input v-model="storelist.version" placeholder="版本"></el-input>
+      </el-form-item>
       <el-form-item label="上传图片">
         <el-upload
           class="upload-demo"
@@ -50,18 +53,23 @@ export default {
       storelist:
         {
           name: '',
+          version: '',
           icon: '',
           finder: ''
-        },
-      dialogImageUrl: '',
-      dialogVisible: false,
-      disabled: false
+        }
     }
   },
   methods: {
     async handleNewApp () {
+      // 防止通信失败兜底
       this.$message({message: '添加成功', type: 'success'})
-      const result = await reqAddApp(this.storelist)
+      // 解决this指向问题
+      const appName = this.storelist.name
+      const appVersion = this.storelist.version
+      const icon = this.storelist.icon
+      const finder = this.storelist.finder
+      // 上传数据，返回result,请求逻辑封装在./../api中
+      const result = await reqAddApp({appName, appVersion, icon, finder})
       this.$message({message: result.msg, type: 'success'})
     }
   }
