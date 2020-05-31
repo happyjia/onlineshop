@@ -18,6 +18,7 @@
 </template>
 
 <script>
+// import { reqAdminLogin } from './../api/index'
 export default {
   name: 'index',
   data () {
@@ -27,7 +28,9 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
+    async onSubmit () {
+      // 获取登陆信息
+      // const result = await reqAdminLogin({userName,psw})
       if (this.userName === 'admin' && this.psw === '123456') {
         this.$message({
           message: '登陆成功',
