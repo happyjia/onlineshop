@@ -11,7 +11,7 @@
         <el-upload
           class="upload-demo"
           drag
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="/addApp"
           v-model="storelist.icon"
           multiple>
           <i class="el-icon-upload"></i>
@@ -21,7 +21,7 @@
       </el-form-item>
       <el-form-item label="上传文件">
         <el-upload
-          action="#"
+          action="/addApp"
           list-type="picture-card"
           :auto-upload="false">
           <i slot="default" class="el-icon-plus"></i>
@@ -46,31 +46,57 @@
 </template>
 
 <script>
-import {reqAddApp} from './../api/index'
+// import {reqAddApp} from './../api/index'
 export default {
   data () {
     return {
       storelist:
         {
           name: '',
-          version: '',
-          icon: '',
-          finder: ''
+          version: ''
+          // icon: '',
+          // finder: ''
         }
     }
   },
   methods: {
-    async handleNewApp () {
-      // 防止通信失败兜底
-      this.$message({message: '添加成功', type: 'success'})
-      // 解决this指向问题
-      const appName = this.storelist.name
-      const appVersion = this.storelist.version
-      const icon = this.storelist.icon
-      const finder = this.storelist.finder
-      // 上传数据，返回result,请求逻辑封装在./../api中
-      const result = await reqAddApp({appName, appVersion, icon, finder})
-      this.$message({message: result.msg, type: 'success'})
+    // async handleNewApp () {
+    //   // 防止通信失败兜底
+    //   this.$message({message: '添加成功', type: 'success'})
+    //   // 解决this指向问题
+    //   const appName = this.storelist.name
+    //   const appVersion = this.storelist.version
+    //   const icon = this.storelist.icon
+    //   const finder = this.storelist.finder
+    //   // 上传数据，返回result,请求逻辑封装在./../api中
+    //   const result = await reqAddApp({appName, appVersion, icon, finder})
+    //   this.$message({message: result.msg, type: 'success'})
+    // }
+    handleNewApp (param) {
+      console.log(param)
+      let form = new FormData()
+      let icon = ''
+      let file = ''
+      // {name, version, icon, app}
+      form.append('name', this.storelist.name)
+      form.append('version', this.storelist.version)
+      // 文件自动上传，不需要这两个参数
+      form.append('icon', icon)
+      form.append('app', file)
+      this.$axios({
+        methods: 'post',
+        url: '/admin/addApp',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: form
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message({message: res.msg, type: 'success'})
+        } else {
+          this.$message({message: res.msg, type: 'error'})
+        }
+      })
     }
   }
 }
