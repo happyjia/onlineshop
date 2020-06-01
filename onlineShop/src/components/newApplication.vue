@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="storelist" class="demo-form-inline">
+    <el-form  :model="storelist" class="demo-form-inline">
       <el-form-item label="应用名称">
         <el-input v-model="storelist.name" placeholder="应用名称"></el-input>
       </el-form-item>
@@ -9,37 +9,26 @@
       </el-form-item>
       <el-form-item label="上传图片">
         <el-upload
-          class="upload-demo"
           drag
-          action="/addApp"
-          v-model="storelist.icon"
+          action="/admin/addApp"
+          :auto-upload="false"
+          :on-change="iconChange"
           multiple>
           <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
       </el-form-item>
       <el-form-item label="上传文件">
         <el-upload
-          action="/addApp"
-          list-type="picture-card"
-          :auto-upload="false">
-          <i slot="default" class="el-icon-plus"></i>
-          <div slot="file" slot-scope="{file}">
-            <img
-              class="el-upload-list__item-thumbnail"
-              src="./../assets/pic.png" alt=""
-            >
-            <span class="el-upload-list__item-actions">
-      </span>
-          </div>
+          action="/admin/addApp/"
+          :on-change="handlePreview"
+          :auto-upload="false"
+          multiple
+          :limit="1">
+          <el-button size="small" type="primary">点击上传文件</el-button>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleNewApp">添加</el-button>
+        <el-button type="primary" @click="handleNewApp" style="width: 100%">添加</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -53,38 +42,28 @@ export default {
       storelist:
         {
           name: '',
-          version: ''
-          // icon: '',
-          // finder: ''
+          version: '',
+          icon: '',
+          finder: ''
         }
     }
   },
   methods: {
-    // async handleNewApp () {
-    //   // 防止通信失败兜底
-    //   this.$message({message: '添加成功', type: 'success'})
-    //   // 解决this指向问题
-    //   const appName = this.storelist.name
-    //   const appVersion = this.storelist.version
-    //   const icon = this.storelist.icon
-    //   const finder = this.storelist.finder
-    //   // 上传数据，返回result,请求逻辑封装在./../api中
-    //   const result = await reqAddApp({appName, appVersion, icon, finder})
-    //   this.$message({message: result.msg, type: 'success'})
-    // }
-    handleNewApp (param) {
-      console.log(param)
+    iconChange (file) {
+      this.storelist.icon = file.raw
+      console.log(this.storelist.icon)
+    },
+    handlePreview (file) {
+      this.storelist.finder = file.raw
+    },
+    handleNewApp () {
       let form = new FormData()
-      let icon = ''
-      let file = ''
-      // {name, version, icon, app}
       form.append('name', this.storelist.name)
       form.append('version', this.storelist.version)
-      // 文件自动上传，不需要这两个参数
-      form.append('icon', icon)
-      form.append('app', file)
+      form.append('icon', this.storelist.icon)
+      form.append('app', this.storelist.finder)
       this.$axios({
-        methods: 'post',
+        method: 'post',
         url: '/admin/addApp',
         headers: {
           'Content-Type': 'multipart/form-data'

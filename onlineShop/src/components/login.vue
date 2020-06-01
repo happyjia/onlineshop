@@ -12,25 +12,11 @@
         <el-button  @click="onSubmit">登录</el-button>
       </el-form-item>
     </el-form>
-<!--    <div class="container">-->
-<!--      <span>管理员登录</span>-->
-<!--      <div class="item">-->
-<!--        <span>账户</span>-->
-<!--        <el-input v-model="userName"></el-input>-->
-<!--      </div>-->
-<!--      <div class="item">-->
-<!--        <span>密码</span>-->
-<!--        <el-input type="password" v-model="psw"></el-input>-->
-<!--      </div>-->
-<!--      <div class="item">-->
-<!--        <el-button  @click="onSubmit">登陆</el-button>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 
 <script>
-import { reqAdminLogin } from './../api/index'
+// import { reqAdminLogin } from './../api/index'
 export default {
   name: 'index',
   data () {
@@ -40,21 +26,26 @@ export default {
     }
   },
   methods: {
-    async onSubmit () {
-      const userName = this.userName
-      const psw = this.psw
-      // 便于测试，成功后可将47行删除
-      await this.$router.push({ path: '/SelectNext' })
-      const result = await reqAdminLogin({userName, psw})
-      if (result) {
+    onSubmit () {
+      let loginForm = new FormData()
+      loginForm.append('username', this.userName)
+      loginForm.append('password', this.psw)
+      this.$axios({
+        method: 'post',
+        url: '/adminLogin',
+        contentType: 'application/x-www-form-urlencoded',
+        data: loginForm
+      }).then(res => {
+        let message = res.data.msg
         this.$message({
-          message: '登陆成功',
+          message: message,
           type: 'success'
         })
-        await this.$router.push({ path: '/SelectNext' })
-      } else {
+        this.$router.push({ path: '/SelectNext' })
+      }).catch(e => {
+        console.log(e)
         this.$message.error('登陆失败')
-      }
+      })
     }
   }
 }
