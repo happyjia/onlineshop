@@ -17,6 +17,8 @@
 
 <script>
 // import { reqAdminLogin } from './../api/index'
+import axios from 'axios'
+
 export default {
   name: 'index',
   data () {
@@ -30,11 +32,15 @@ export default {
       let loginForm = new FormData()
       loginForm.append('username', this.userName)
       loginForm.append('password', this.psw)
+      const username = this.userName
+      const password = this.psw
       this.$axios({
         method: 'post',
         url: '/adminLogin',
-        contentType: 'application/x-www-form-urlencoded',
-        data: loginForm
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {username, password}
       }).then(res => {
         let message = res.data.msg
         this.$message({

@@ -1,7 +1,7 @@
 <template>
   <div class="pic_item">
+    <el-button type="primary" @click="backIndex" class="back">返回首页</el-button>
     <div class="item" v-for="(item,index) in storelist" :key="index">
-
       <img class="pic" :src='item.iconUrl'>
       <div class="word">
         <p class="line">
@@ -55,6 +55,9 @@ export default {
         console.log(e);
       })
     },
+    backIndex () {
+      this.$router.push({ path: '/' })
+    },
     getData () {
       if(this.storelist.length != 0){
         this.storelist.splice(0, this.storelist.length);
@@ -74,4 +77,9 @@ export default {
 
 <style scoped>
   @import '../assets/css/style.css';
+  .back{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+  }
 </style>

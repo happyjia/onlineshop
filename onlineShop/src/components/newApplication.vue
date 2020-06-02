@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <el-button type="primary" @click="backIndex" class="back">返回首页</el-button>
     <el-form  :model="storelist" class="demo-form-inline">
       <el-form-item label="应用名称">
         <el-input v-model="storelist.name" placeholder="应用名称"></el-input>
@@ -53,6 +54,9 @@ export default {
       this.storelist.icon = file.raw
       console.log(this.storelist.icon)
     },
+    backIndex () {
+      this.$router.push({ path: '/' })
+    },
     handlePreview (file) {
       this.storelist.finder = file.raw
     },
@@ -70,11 +74,9 @@ export default {
         },
         data: form
       }).then(res => {
-        if (res.code === 200) {
-          this.$message({message: res.msg, type: 'success'})
-        } else {
-          this.$message({message: res.msg, type: 'error'})
-        }
+        this.$message({message: res.msg, type: 'success'})
+      }).catch(err => {
+        this.$message({message: err.msg, type: 'error'})
       })
     }
   }
@@ -89,6 +91,11 @@ export default {
     width: 100%;
     height: 100%;
     padding: 10px;
+  }
+  .back{
+    position: absolute;
+    right: 20px;
+    top: 10px;
   }
   .item{
     width: 300px;
