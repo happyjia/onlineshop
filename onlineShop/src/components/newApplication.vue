@@ -74,9 +74,11 @@ export default {
         },
         data: form
       }).then(res => {
-        this.$message({message: res.msg, type: 'success'})
+        console.log(res)
+        this.$message({message: '添加成功', type: 'success'})
       }).catch(err => {
-        this.$message({message: err.msg, type: 'error'})
+        console.log(err)
+        this.$message({message: '添加失败', type: 'error'})
       })
     }
   }
